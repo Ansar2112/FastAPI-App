@@ -2,7 +2,11 @@
 
 This is a app for learning purposes
 
-### HTTP Status Codes
+## Query Parameters
+
+**Query Parameters** are optional key-value pairs appended to the end of a URL used ot pass additional data to the server in an HTTP request.
+
+## HTTP Status Codes
 
 HTTP Status Codes - 3 Digit Numbers - Indicate result of a client's request
 

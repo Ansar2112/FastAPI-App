@@ -1,54 +1,12 @@
-from fastapi import FastAPI, Path, HTTPException, Query
-import json
+# from huggingface_hub import snapshot_download
 
-app = FastAPI()
+# snapshot_download(
+#     repo_id="Qwen/Qwen2-VL-2B-Instruct",  # chat-capable version
+#     local_dir="models/Qwen2-VL-2B-Instruct",
+#     local_dir_use_symlinks=False
+# )
 
-def load_data():
-    with open('patients.json', 'r') as f:
-        data = json.load(f)
+# check_executable.py
+import sys
+print(sys.executable)
 
-    return data
-
-load_data()
-
-@app.get("/")
-def hello():
-    return {'message':'Patient Management System API'}
-
-@app.get("/about")
-def about():
-    return {'message':'A fully functional API to manage your patient record'}
-
-@app.get('/view')
-def view():
-    data = load_data()
-
-    return data
-
-@app.get('/patient/{patient_id}')
-def view_patient(patient_id: str = Path(..., description='ID of the patient in the DB', example='P001')):
-
-    data = load_data()
-
-    if patient_id in data:
-        return data[patient_id]
-    raise HTTPException(status_code=404, detail='Patient Not Found')
-
-@app.get('/sort')
-def sort_patients(sort_by: str = Query(..., description='Sort on the basis of height, weight, or bmi'), order: str = Query('asc', description='Sort in ASC or DESC order')):
-
-    valid_fields = ['height', 'weight', 'bmi']
-
-    if sort_by not in valid_fields:
-        raise HTTPException(status_code=400, detail=f"Invalid field select from {valid_fields}")
-    
-    if order not in ['asc', 'desc']:
-        raise HTTPException(status_code=400, detail='Invalid order select between asc and desc')
-    
-    data = load_data()
-
-    sort_order = True if order == 'desc' else False
-
-    sorted_data = sorted(data.values(), key = lambda x: x.get(sort_by,0), reverse=sort_order)
-
-    return sorted_data
